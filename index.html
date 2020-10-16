@@ -31,9 +31,9 @@
             var canvas = document.querySelector('canvas');
             var ctx = canvas.getContext('2d');
 
-            const ball = new Ball(10, 250, 250, 0, 5, 'black');
-            const rect = new Rectangle(100, 50, 250, 350, 0, 0, 'teal');
-            const ball2 = new Ball(15, 200, 150, 2, 6, 'goldenrod');
+            const ball = new Ball(10, 250, 250, -3, 18, 'black', true);
+            const rect = new Rectangle(100, 50, 250, 350, 0, 0, '#067790', false);
+            const ball2 = new Ball(15, 200, 150, 2, 6, 'goldenrod', false);
             var instances = ball.shapes.concat(rect.shapes, ball2.shapes);
 
             ball.drawShape(ctx);
