@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEST</title>
+
+    <style>
+
+        canvas {
+            border: 1px solid black;
+        }
+
+    </style>
+
+    <script src="index.js"></script>
+</head>
+<body>
+    
+    <canvas width="1000" height="500">
+
+
+    </canvas>
+
+    <script>
+ 
+        'use strict';
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            var canvas = document.querySelector('canvas');
+            var ctx = canvas.getContext('2d');
+
+            const ball = new Ball(10, 250, 250, 0, 5, 'black');
+            const rect = new Rectangle(100, 50, 250, 350, 0, 0, 'teal');
+            const ball2 = new Ball(15, 200, 150, 2, 6, 'goldenrod');
+            var instances = ball.shapes.concat(rect.shapes, ball2.shapes);
+
+            ball.drawShape(ctx);
+            ball2.drawShape(ctx);
+            rect.drawShape(ctx);
+
+            ball.moveShape(ctx, canvas, instances);
+            ball2.moveShape(ctx, canvas, instances);
+        });
+    </script>
+</body>
+</html>
