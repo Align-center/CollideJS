@@ -9,6 +9,7 @@ class Shape {
         this.vy = vy;
         this.color = color;
         this.boundaries = boundaries;
+        this.collisions = [];
 
         this.shapes= [];
     }
@@ -17,7 +18,7 @@ class Shape {
         this.shapes.push(instance);
     }
 
-    moveShape(ctx, canvas, instances) {
+    moveShape(ctx, canvas, instances, shape) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         this.redraw(instances, ctx);
@@ -35,8 +36,13 @@ class Shape {
             if(instances[i].boundaries === true) {
                 instances[i].setBoundaries(canvas);
             }
+
+            for (let j = 0; j < instances[i].collisions.length; j++) {
+
+                instances[i].setCollision(instances[i].collisions[j]);
+            }
         }
-        
+
         window.requestAnimationFrame(this.moveShape.bind(this, ctx, canvas, instances));
     }
 
@@ -47,6 +53,11 @@ class Shape {
             instances[i].drawShape(ctx);
         }
     }
+
+    addCollision(shapes) {
+
+        this.collisions = shapes;
+    }
 }
 
 class Ball extends Shape {
@@ -54,6 +65,7 @@ class Ball extends Shape {
     constructor(radius, x, y, vx = 0, vy = 5, color = 'black', boundaries) {
         super(x, y, vx, vy, color, boundaries);
         this.radius = radius;
+        this.type = 'circle';
 
         super.instances(this);
     }
@@ -114,6 +126,57 @@ class Ball extends Shape {
             this.x = 0 + this.radius;
         }
     }
+
+    setCollision (shape) {
+
+        if (shape.type == 'circle') {
+
+            //Collision detection between 2 circles
+            //Distance between the two circles, not using the sqrt method for performances
+            let distance = (this.x - shape.x)*(this.x - shape.x) + (this.y - shape.y)*(this.y - shape.y);
+
+            //Sum of the two radius, multiply by itself to match the distance
+            let sum = (this.radius + shape.radius)*(this.radius + shape.radius);
+
+            if (distance <= sum) {
+
+                return true;
+            }
+            
+            return false;
+        }
+        else if (shape.type == 'rectangle') {
+
+            //Collision detection between a circle and a rectangle
+
+            //We declare these vars in case none of the following conditions are true
+            let testX = this.x;
+            let testY = this.y;
+
+            //We look for the closest rectangle's edges to the circle
+            if (this.x < shape.x)
+                testX = shape.x;
+            else if (this.x > shape.x + shape.width)
+                testX = shape.x + shape.width;
+
+            if (this.y < shape.y)
+                testY = shape.y;
+            else if (this.y > shape.y + shape.height)
+                testY = shape.y + shape.height;
+
+            //Calculation of the distance between the found edges and the circles
+            let distX = this.x - testX;
+            let distY = this.y - testY;
+
+            let distance = (distX*distX)+(distY*distY);
+            
+            if (distance <= (this.radius * this.radius)) {
+                
+                return true;
+            }
+        }
+
+    }
 }
 
 class Rectangle extends Shape{
@@ -122,6 +185,7 @@ class Rectangle extends Shape{
         super(x, y, vx, vy, color, boundaries);
         this.width = width;
         this.height = height;
+        this.type = 'rectangle';
 
         super.instances(this);
     }
