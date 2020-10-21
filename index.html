@@ -31,18 +31,23 @@
             var canvas = document.querySelector('canvas');
             var ctx = canvas.getContext('2d');
 
-            const ball = new Ball(10, 250, 250, -1, 12, 'black', true);
-            const rect = new Rectangle(100, 50, 250, 350, 0, 0, '#067790', false);
-            const ball2 = new Ball(15, 225, 150, -.8, 5, 'goldenrod', true);
-            var instances = ball.shapes.concat(rect.shapes, ball2.shapes);
+            const ball = new Circle(250, 250, 10, 'black');
+            const rect = new Rectangle(250, 350, 100, 50, '#067790');
+            const ball2 = new Circle(225, 150, 15, 'goldenrod');
 
-            ball.addCollision([rect, ball2]);
+            var instances = ball.setInstances(rect, ball2);
 
-            ball.drawShape(ctx);
-            ball2.drawShape(ctx);
-            rect.drawShape(ctx);
+            ball.setVelocity(-.3, 5);
+            ball.isRestricted(true);
+            ball.addCollision(rect, ball2);
 
-            ball.moveShape(ctx, canvas, instances);
+            ball2.setVelocity(-.2, 7);
+            ball2.isRestricted(true);
+
+            ball.moveShape(ctx, canvas, instances, function(shape) {
+
+                shape.color = 'pink';
+            });
             ball2.moveShape(ctx, canvas, instances);
         });
     </script>

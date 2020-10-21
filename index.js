@@ -2,23 +2,41 @@
 
 class Shape {
 
-    constructor(x, y, vx, vy, color, boundaries){
+    constructor(x, y, color){
         this.x = x;
         this.y = y;
+        this.vx = 0;
+        this.vy = 0;
+        this.color = color;
+        this.boundaries = false;
+        this.collisions = [];
+        this.shapes= [];
+    }
+
+    setVelocity(vx, vy) {
         this.vx = vx;
         this.vy = vy;
-        this.color = color;
-        this.boundaries = boundaries;
-        this.collisions = [];
+    }
 
-        this.shapes= [];
+    setInstances() {
+        
+        let instances = [this];
+
+        for (let i = 0; i < arguments.length; i++) 
+            instances.push(arguments[i]);
+
+        return instances;
+    }
+
+    isRestricted(bool) {
+        this.boundaries = bool;
     }
 
     instances(instance) {
         this.shapes.push(instance);
     }
 
-    moveShape(ctx, canvas, instances, shape) {
+    moveShape(ctx, canvas, instances, callback = function(){}) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         this.redraw(instances, ctx);
@@ -39,11 +57,11 @@ class Shape {
 
             for (let j = 0; j < instances[i].collisions.length; j++) {
 
-                instances[i].setCollision(instances[i].collisions[j]);
+                instances[i].setCollision(instances[i].collisions[j], callback);
             }
         }
 
-        window.requestAnimationFrame(this.moveShape.bind(this, ctx, canvas, instances));
+        window.requestAnimationFrame(this.moveShape.bind(this, ctx, canvas, instances, callback));
     }
 
     redraw(instances, ctx) {
@@ -54,16 +72,17 @@ class Shape {
         }
     }
 
-    addCollision(shapes) {
+    addCollision() {
 
-        this.collisions = shapes;
+        for (let i = 0; i < arguments.length; i++) 
+            this.collisions.push(arguments[i]);
     }
 }
 
-class Ball extends Shape {
+class Circle extends Shape {
 
-    constructor(radius, x, y, vx = 0, vy = 5, color = 'black', boundaries) {
-        super(x, y, vx, vy, color, boundaries);
+    constructor(x, y, radius, color = 'black') {
+        super(x, y, color);
         this.radius = radius;
         this.type = 'circle';
 
@@ -116,7 +135,7 @@ class Ball extends Shape {
             }  
         }
 
-        //Make impossible for the ball the get out of the canvas
+        //Make impossible for the circle the get out of the canvas
         if (this.x + this.radius > canvas.width) {
 
             this.x = canvas.width - this.radius;
@@ -127,7 +146,7 @@ class Ball extends Shape {
         }
     }
 
-    setCollision (shape) {
+    setCollision (shape, callback) {
 
         if (shape.type == 'circle') {
 
@@ -138,11 +157,13 @@ class Ball extends Shape {
             //Sum of the two radius, multiply by itself to match the distance
             let sum = (this.radius + shape.radius)*(this.radius + shape.radius);
 
+
             if (distance <= sum) {
 
-                return true;
+                if (typeof callback == 'function')
+                    callback(shape);
             }
-            
+
             return false;
         }
         else if (shape.type == 'rectangle') {
@@ -169,11 +190,10 @@ class Ball extends Shape {
             let distY = this.y - testY;
 
             let distance = (distX*distX)+(distY*distY);
-            
-            if (distance <= (this.radius * this.radius)) {
-                
-                return true;
-            }
+
+            if (distance <= (this.radius * this.radius))
+                callback(shape);
+                // return true;
         }
 
     }
@@ -181,8 +201,8 @@ class Ball extends Shape {
 
 class Rectangle extends Shape{
 
-    constructor(width, height, x, y, vx = 0, vy = 5, color = 'black', boundaries) {
-        super(x, y, vx, vy, color, boundaries);
+    constructor(x, y, width, height, color = 'black') {
+        super(x, y,color);
         this.width = width;
         this.height = height;
         this.type = 'rectangle';
