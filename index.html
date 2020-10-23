@@ -33,21 +33,36 @@
 
             const ball = new Circle(250, 250, 10, 'black');
             const rect = new Rectangle(250, 350, 100, 50, '#067790');
+            const square = new Rectangle(425, 49, 75, 75, 'forestgreen');
             const ball2 = new Circle(225, 150, 15, 'goldenrod');
 
-            var instances = ball.setInstances(rect, ball2);
+            var instances = rect.setInstances(square, ball, ball2);
 
-            ball.setVelocity(-.3, 5);
+            ball.setVelocity(-3, 2);
             ball.isRestricted(true);
-            ball.addCollision(rect, ball2);
+            ball.addCollision(ball2, square);
 
-            ball2.setVelocity(-.2, 7);
+            ball2.setVelocity(-1, 4);
             ball2.isRestricted(true);
 
+            rect.setVelocity(0, 0);
+            rect.isRestricted(true);
+            rect.addCollision(square);
+
+            square.setVelocity(-1, -20);
+            square.isRestricted(true);
+
+            square.moveShape(ctx, canvas, instances);
             ball.moveShape(ctx, canvas, instances, function(shape) {
 
+                console.log('ball');
                 shape.color = 'pink';
             });
+            rect.moveShape(ctx, canvas, instances, function(shape) {
+                console.log('rect');
+                shape.color = 'blue';
+            });
+            
             ball2.moveShape(ctx, canvas, instances);
         });
     </script>

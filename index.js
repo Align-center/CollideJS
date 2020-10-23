@@ -144,6 +144,13 @@ class Circle extends Shape {
 
             this.x = 0 + this.radius;
         }
+
+        if (this.y + this.radius < 0 ) {
+            this.y = 0 + this.radius;
+        }
+        else if (this.y + this.radius > canvas.height) {
+            this.y = canvas.height - this.radius;
+        }
     }
 
     setCollision (shape, callback) {
@@ -215,5 +222,90 @@ class Rectangle extends Shape{
         ctx.fillStyle = this.color;
         ctx.rect(this.x, this.y, this.width, this.height);
         ctx.fill();
+    }
+
+    setBoundaries(canvas) {
+        //Upper and Lower Boundaries
+        //Lower
+        if (this.y + this.vy + this.height> canvas.height) {
+                
+            if (this.vy < .6) {
+
+                this.vy = 0;
+            }
+            else {
+
+                this.vy = -this.vy;
+                this.vy *= .5;
+
+                this.vx *= .6;
+            }
+        }
+
+        //Upper
+        if (this.y + this.vy < 0) {
+
+            this.vy = - this.vy
+            this.vy *= .5;
+        }
+
+        //Sides Boundaries
+        if (this.x + this.vx + this.width > canvas.width || this.x + this.vx < 0) {
+            
+            if (this.vx < 2 && this.vx > -2) {
+
+                this.vx = 0;
+            }
+            else {
+
+                let number = .5
+                this.vx *= number;
+                this.vx = -this.vx;
+                number -= .3;
+            }  
+        }
+
+        //Make impossible for the shape the get out of the canvas
+        if (this.x + this.width > canvas.width) {
+
+            this.x = canvas.width - this.width;
+        }
+        else if (this.x < 0) {
+
+            this.x = 0;
+        }
+
+        if (this.y < 0) {
+            this.y = 0;
+        }
+        else if (this.y + this.height > canvas.height) {
+            this.y = canvas.height - this.height;
+        }
+    }
+
+    setCollision(shape, callback) {
+
+        if (shape.type == 'rectangle') {
+
+            if (shape.x > this.x + this.width) 
+                return false;
+            
+            else if (this.x > shape.x + shape.width) 
+                return false;
+            
+            else if (shape.y > this.y + this.height) 
+                return false;
+            
+            else if (this.y > shape.y + shape.height) 
+                return false;
+            
+            else {
+                if (typeof callback == 'function')
+                    callback(shape);
+                
+                console.log('TEST');
+            }
+            
+        }
     }
 }
