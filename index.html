@@ -40,30 +40,32 @@
 
             ball.setVelocity(-3, 2);
             ball.isRestricted(true);
-            ball.addCollision(ball2, square);
+            ball.addCollision(ball2);
 
-            ball2.setVelocity(-1, 4);
+            ball2.setVelocity(-4, 4);
             ball2.isRestricted(true);
+            ball2.addCollision(rect, square)
 
             rect.setVelocity(0, 0);
             rect.isRestricted(true);
-            rect.addCollision(square);
+            rect.addCollision(square, ball2);
 
-            square.setVelocity(-1, -20);
+            square.setVelocity(-2, 15);
             square.isRestricted(true);
-
-            square.moveShape(ctx, canvas, instances);
-            ball.moveShape(ctx, canvas, instances, function(shape) {
-
-                console.log('ball');
+            square.addCollision(ball, ball2)
+            
+            ball.moveShape(ctx, canvas, instances, function (shape) {
                 shape.color = 'pink';
             });
-            rect.moveShape(ctx, canvas, instances, function(shape) {
-                console.log('rect');
+            rect.moveShape(ctx, canvas, instances, function (shape) {
                 shape.color = 'blue';
             });
-            
-            ball2.moveShape(ctx, canvas, instances);
+            ball2.moveShape(ctx, canvas, instances, function (shape) {
+                shape.color = 'red';
+            });
+            square.moveShape(ctx, canvas, instances, function(shape) {
+                shape.color = 'goldenrod';
+            });
         });
     </script>
 </body>

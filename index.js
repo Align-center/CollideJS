@@ -36,7 +36,7 @@ class Shape {
         this.shapes.push(instance);
     }
 
-    moveShape(ctx, canvas, instances, callback = function(){}) {
+    moveShape(ctx, canvas, instances, callback) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         this.redraw(instances, ctx);
@@ -55,9 +55,10 @@ class Shape {
                 instances[i].setBoundaries(canvas);
             }
 
-            for (let j = 0; j < instances[i].collisions.length; j++) {
+            for (let j = 0; j < this.collisions.length; j++) {
 
-                instances[i].setCollision(instances[i].collisions[j], callback);
+                if (typeof callback == 'function')
+                    this.setCollision(this.collisions[j], callback);
             }
         }
 
@@ -170,8 +171,6 @@ class Circle extends Shape {
                 if (typeof callback == 'function')
                     callback(shape);
             }
-
-            return false;
         }
         else if (shape.type == 'rectangle') {
 
@@ -200,7 +199,6 @@ class Circle extends Shape {
 
             if (distance <= (this.radius * this.radius))
                 callback(shape);
-                // return true;
         }
 
     }
@@ -302,10 +300,34 @@ class Rectangle extends Shape{
             else {
                 if (typeof callback == 'function')
                     callback(shape);
-                
-                console.log('TEST');
             }
-            
+        }
+        else if (shape.type == 'circle') {
+            //Collision detection between a rectangle and a circle
+
+            //We declare these vars in case none of the following conditions are true
+            let testX = shape.x;
+            let testY = shape.y;
+
+            //We look for the closest rectangle's edges to the circle
+            if (shape.x < this.x)
+                testX = this.x;
+            else if (shape.x > this.x + this.width)
+                testX = this.x + this.width;
+
+            if (shape.y < this.y)
+                testY = this.y;
+            else if (shape.y > this.y + this.height)
+                testY = this.y + this.height;
+
+            //Calculation of the distance between the found edges and the circles
+            let distX = shape.x - testX;
+            let distY = shape.y - testY;
+
+            let distance = (distX*distX)+(distY*distY);
+
+            if (distance <= (shape.radius * shape.radius))
+                callback(shape);
         }
     }
 }
