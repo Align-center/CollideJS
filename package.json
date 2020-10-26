@@ -1,0 +1,22 @@
+{
+  "name": "collidejs",
+  "version": "1.0.0",
+  "description": "A simple collision detection library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Align-center/CollideJS.git"
+  },
+  "keywords": [
+    "Collision"
+  ],
+  "author": "Align-center",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Align-center/CollideJS/issues"
+  },
+  "homepage": "https://github.com/Align-center/CollideJS#readme"
+}

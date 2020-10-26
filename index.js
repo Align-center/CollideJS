@@ -168,8 +168,10 @@ class Circle extends Shape {
 
             if (distance <= sum) {
 
-                if (typeof callback == 'function')
-                    callback(shape);
+                if (typeof callback == 'function') {
+                    let shapes = [shape, this];
+                    callback(shapes);
+                }
             }
         }
         else if (shape.type == 'rectangle') {
@@ -197,8 +199,11 @@ class Circle extends Shape {
 
             let distance = (distX*distX)+(distY*distY);
 
-            if (distance <= (this.radius * this.radius))
-                callback(shape);
+            if (distance <= (this.radius * this.radius)) {
+                let shapes = [shape, this];
+                callback(shapes);
+            }
+
         }
 
     }
@@ -298,8 +303,10 @@ class Rectangle extends Shape{
                 return false;
             
             else {
-                if (typeof callback == 'function')
-                    callback(shape);
+                if (typeof callback == 'function') {
+                    let shapes = [shape, this];
+                    callback(shapes);
+                }
             }
         }
         else if (shape.type == 'circle') {
@@ -326,8 +333,10 @@ class Rectangle extends Shape{
 
             let distance = (distX*distX)+(distY*distY);
 
-            if (distance <= (shape.radius * shape.radius))
-                callback(shape);
+            if (distance <= (shape.radius * shape.radius)){
+                let shapes = [shape, this];
+                callback(shapes);
+            }
         }
     }
 }
